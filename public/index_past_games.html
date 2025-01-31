@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Past NFL Games</title>
+</head>
+
+<!-- Banner estático en cada página -->
+<header id="banner-container">
+    <div id="logo">
+        <h1>BetZone</h1>
+    </div>
+    <div id="user-info">
+        <span id="username-display">Loading...</span>
+        <span id="balance-display">Loading...</span>
+    </div>
+    <div id="banner-buttons">
+        <button id="menu-button">Menu</button>
+        <button id="logout-button">Logout</button>
+    </div>
+</header>
+
+<style>
+    #banner-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #222;
+        color: white;
+        padding: 10px 20px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    #logo h1 {
+        margin: 0;
+    }
+
+    #user-info {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    #banner-buttons button {
+        margin-left: 10px;
+        background: rgb(8, 225, 30);
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        try {
+            const response = await fetch('/session-user', { credentials: 'include' });
+
+            if (!response.ok) {
+                throw new Error('User not authenticated');
+            }
+
+            const user = await response.json();
+
+            // Mostrar datos en el banner
+            document.getElementById('username-display').innerText = `Welcome, ${user.username}`;
+            document.getElementById('balance-display').innerText = `Balance: $${user.balance}`;
+
+            // Redirección al menú
+            document.getElementById('menu-button').addEventListener('click', () => {
+                window.location.href = 'prueba.html';
+            });
+
+            // Logout
+            document.getElementById('logout-button').addEventListener('click', async () => {
+                await fetch('/logout', { method: 'POST', credentials: 'include' });
+                window.location.href = 'login.html';
+            });
+
+        } catch (error) {
+            console.error('Error loading user data:', error);
+            window.location.href = 'login.html'; // Redirigir si no está autenticado
+        }
+    });
+</script>
+
+<body id="index-past-games">
+
+
+    <!-- PAST GAMES SCREEN -->
+    <div id="past-games-screen" class="hidden glass-effect">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Past NFL Games</title>
+            <link rel="stylesheet" href="styles_past_games.css">
+        </head>
+        
+            <header>
+                <h1>Past NFL Games</h1>
+                <div id="loading-spinner" class="loading-spinner"></div>
+            </header>
+            <main>
+                <div id="games-container" class="games-grid"></div>
+                <button id="load-more-button" class="load-more-btn">Load More</button>
+                <p id="no-more-games" class="no-more-msg" style="display: none;">No more games to display.</p>
+            </main>
+            <script src="app.js" defer></script>
+
+        
+    </div>  
+    
+    <div id="menu-button" class="menu-button">
+        <i class="fas fa-bars"></i>
+    </div>
+    
+
+</body>
+</html>
+

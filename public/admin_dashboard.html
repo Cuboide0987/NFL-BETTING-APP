@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Dashboard</title>
+    <link rel="stylesheet" href="styles_admin_dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<body id="admin-dashboard">
+    <main>
+        <!--  Developer Dashboard  -->
+        <h1>Developer Dashboard</h1>
+        <section id="users-section">
+            <h2>All Users</h2>
+            <ul id="users-list">
+                <!-- Aquí se llenará la lista de usuarios -->
+            </ul>
+        </section>
+
+        <section id="user-bets-section" style="display: none;">
+            <h2>User Bets</h2>
+            <button id="back-button">Back to Users</button>
+            <ul id="user-bets-list">
+                <!-- Aquí se mostrarán las apuestas del usuario -->
+            </ul>
+        </section>
+    </main>
+    <script src="app.js" defer></script>
+
+
+    <div id="menu-button" class="menu-button">
+        <i  class="fas fa-bars"></i>
+    </div>
+
+</body>
+</html>

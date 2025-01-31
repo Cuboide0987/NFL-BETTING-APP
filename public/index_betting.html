@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Betting Screen</title>
+    <link rel="stylesheet" href="styles_betting.css">
+</head>
+<body id="index-betting">
+
+    <h1>Who are you betting on?</h1>
+    <div id="game-details"></div>
+
+    <!-- Betting Screen -->
+    <div id="betting-screen">
+        <div class="team-logo-container">
+            <!-- Logos de los equipos -->
+        </div>
+        <p id="betting-message">Click on a logo to select your team</p>
+
+        <header>
+            <div id="user-info">
+                <span id="username-display">Welcome, User</span>
+                <span id="balance-display"> | Balance: $100</span>
+            </div>
+        </header>
+
+        <!-- Bet Amount Section -->
+        <form id="bet-form" class="modern-form">
+            <label for="bet-amount">Bet Amount ($):</label>
+            <input type="number" id="bet-amount" placeholder="Enter bet amount" min="1" required />
+            <button id="submit-bet" type="submit" class="gradient-btn">Place Bet</button>
+        </form>
+
+        <div id="game-details"></div>
+
+        <div id="more-info-container" style="display: none;">
+            <p><strong>Game ID:</strong> <span id="game-id-display"></span></p>
+            <p><strong>Venue:</strong> <span id="game-venue-display"></span></p>
+            <p><strong>Date:</strong> <span id="game-date-display"></span></p>
+        </div>
+        <button id="more-info-btn">Show More Info</button>
+        
+    </div>
+
+    <script src="betting.js" defer></script>
+
+
+    <div id="menu-button" class="menu-button">
+        <i class="fas fa-bars"></i>
+    </div>
+    
+</body>
+</html>

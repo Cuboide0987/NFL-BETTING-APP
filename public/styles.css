@@ -1,0 +1,144 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* OOOOOOOOOOOOOOO Buttons OOOOOOOOOOOOOOO  */
+
+/* styles.css */
+
+.nav-button {
+    width: 100%;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background: linear-gradient(45deg, #4CAF50, #81C784);
+    border: 2px solid #388E3C;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 25px;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:hover, .nav-button.active {
+    background: linear-gradient(45deg, #66BB6A, #A5D6A7);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+}
+
+
+.nav-button i {
+    font-size: 1.2rem;
+}
+
+/* BUTTONS STYLES*/
+.ses-button, .weeks-button {
+    background: linear-gradient(45deg, #4CAF50, #81C784); /* Updated gradient */
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #388E3C; /* Added border */
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Updated shadow */
+}
+
+.seasons-button:hover, .weeks-button:hover {
+    transform: translateY(-3px); /* Slightly increased hover effect */
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4); /* Enhanced shadow on hover */
+}
+
+.nav-button:hover, .nav-button.active {
+    background: linear-gradient(45deg, #66BB6A, #A5D6A7); /* Updated hover gradient */
+    color: #fff;
+    transform: translateY(-3px); /* Added hover effect */
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4); /* Enhanced shadow on hover */
+}
+
+.filter-button {
+    background: linear-gradient(45deg, #4CAF50, #81C784); /* Updated gradient */
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #388E3C; /* Added border */
+    border-radius: 25px; /* Make buttons rounded */
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Added shadow */
+}
+
+.filter-button:hover {
+    transform: translateY(-3px); /* Added hover effect */
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4); /* Enhanced shadow on hover */
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+    gap: 16px; /* Espaciado entre elementos */
+}
+
+.game-item {
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.menu-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #007BFF; /* Cambia el color según el diseño */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.menu-button:hover {
+    transform: scale(1.1);
+}
+
+.menu-button i {
+    color: #fff;
+    font-size: 24px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #159a22;
+    border-radius: 20px;
+    margin: 10px 0;
+}
+
+.nav-link:hover {
+    background-color: #0056b3;
+}

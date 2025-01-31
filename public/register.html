@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body id="register-page">
+
+    <h1>Register</h1>
+    <form id="register-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="balance">Initial Balance (optional):</label>
+        <input type="number" id="balance" name="balance" placeholder="Enter initial balance" min="0">
+
+        <!-- Selector para elegir el rol -->
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="user" selected>User</option>
+            <option value="developer">Developer</option>
+        </select>
+
+        <!-- Campo para contraseña de "developer" -->
+        <div id="developer-password-container" style="display: none;">
+            <label for="developer-password">Developer Key:</label>
+            <input type="password" id="developer-password" name="developer-password">
+        </div>        
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p id="response-message"></p>
+    <p>
+        Already have an account? 
+        <a href="login.html">Login</a>
+    </p>
+
+    <script src="app.js" defer></script>
+
+</body>
+</html>

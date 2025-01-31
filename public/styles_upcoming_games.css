@@ -1,0 +1,158 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #a40227;
+}
+
+/* Button Styles */
+.btn {
+    background-color: #2a3f54;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+.btn:hover {
+    background-color: #1f2e3d;
+}
+
+/* Grid and Item Styles */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.game-item {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease; /* Smooth expansion animation */
+}
+
+.game-item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.game-item h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.game-item p,
+.game-date {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Teams Section */
+.game-teams {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.team {
+    text-align: center;
+}
+
+.team img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+}
+
+/* All Games Section */
+.all-games-container {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    margin: 20px auto;
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #2a3f54; /* Dark grey */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Expandable Game Details */
+.game-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+/* Hover Effect */
+.game-item:hover {
+    cursor: pointer;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.game-item.expanded .game-details {
+    max-height: 200px; /* Adjust as needed */
+}
+
+#load-more {
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.bet-button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.bet-button:hover {
+    background-color: #218838;
+}

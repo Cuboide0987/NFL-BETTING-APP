@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming NFL Events</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .events-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, auto);
+            gap: 10px;
+            padding: 20px;
+        }
+        .event-item {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            background-color: #f9f9f9;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .event-item img {
+            display: block;
+            margin: 5px auto;
+            width: 40px;
+        }
+        .bet-button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .bet-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Upcoming NFL Events</h1>
+        <button onclick="window.location.href='index.html'">Back to Main</button>
+    </header>
+    
+    <div id="events-list" class="events-container">
+        <p>Loading upcoming events...</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const eventsList = document.getElementById('events-list');
+            const API_URL = 'https://nfl-api-data.p.rapidapi.com/nfl-events?year=2025';
+            const API_KEY = '2b5338f5ecmshe206c499500d2a5p1bc461jsnf003ac6a0efb';
+            const today = new Date();
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-key': API_KEY,
+                        'x-rapidapi-host': 'nfl-api-data.p.rapidapi.com'
+                    }
+                });
+
+                const data = await response.json();
+                const events = data.events || [];
+                eventsList.innerHTML = '';
+                
+                if (events.length === 0) {
+                    eventsList.innerHTML = '<p>No upcoming events found.</p>';
+                    return;
+                }
+
+                events.forEach(event => {
+                    const dateObj = new Date(event.date);
+                    if (dateObj >= today) { 
+                        const formattedDate = dateObj.toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase().replace(',', '');
+                        const gameId = event.id;
+                        const homeTeam = event.competitions[0].competitors.find(team => team.homeAway === 'home').team;
+                        const awayTeam = event.competitions[0].competitors.find(team => team.homeAway === 'away').team;
+                        
+                        const eventItem = document.createElement('div');
+                        eventItem.classList.add('event-item');
+                        eventItem.innerHTML = `
+                            <h3>${homeTeam.displayName} vs ${awayTeam.displayName}</h3>
+                            <img src="${homeTeam.logo}" alt="${homeTeam.displayName}">
+                            <img src="${awayTeam.logo}" alt="${awayTeam.displayName}">
+                            <p>Game ID: ${gameId}</p>
+                            <p>Date: ${formattedDate}</p>
+                            <p>Venue: ${event.competitions[0].venue.fullName}</p>
+                            <button class="bet-button" onclick="saveGameData(${gameId}, '${homeTeam.displayName}', '${awayTeam.displayName}', '${formattedDate}', '${event.competitions[0].venue.fullName}', '${homeTeam.logo}', '${awayTeam.logo}')">Bet Now</button>
+                        `;
+                        eventsList.appendChild(eventItem);
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching future events:', error);
+                eventsList.innerHTML = '<p>Error loading upcoming events.</p>';
+            }
+        });
+
+        function saveGameData(gameId, homeTeam, awayTeam, date, venue, homeLogo, awayLogo) {
+            const selectedGame = {
+                id: gameId,
+                homeTeam,
+                awayTeam,
+                date,
+                venue,
+                homeLogo,
+                awayLogo
+            };
+            localStorage.setItem('selectedGame', JSON.stringify(selectedGame));
+            window.location.href = 'index_betting.html';
+        }
+    </script>
+</body>
+</html>

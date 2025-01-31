@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Bets</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<!-- 🎯 Banner estático -->
+<header id="banner-container">
+    <div id="logo">
+        <h1>BetZone</h1>
+    </div>
+    <div id="user-info">
+        <span id="username-display">Loading...</span>
+        <span id="balance-display">Loading...</span>
+    </div>
+    <div class="button-container">
+        <button class="nav-button" id="menu-button">Menu</button>
+        <button class="nav-button" id="logout-button">Logout</button>
+    </div>
+</header>
+
+<!-- 🎨 Estilos Mejorados -->
+<style>
+    /* Fuente y Reset */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #1e1e1e;
+        color: white;
+        margin: 0;
+        padding-top: 80px;
+    }
+
+    /* 🎯 Banner Mejorado */
+    #banner-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent !important; /* Fondo completamente transparente */
+            padding: 15px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: none !important; /* Elimina cualquier sombra */
+            border-bottom: none !important; /* Elimina el borde */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+    #logo h1 {
+        margin: 0;
+        color: #00ff99;
+        font-weight: 600;
+    }
+
+    #user-info {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+    #banner-buttons button {
+        background: linear-gradient(135deg, #00ff99, #0077ff);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    #banner-buttons button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    /* 📜 Estilo de la Lista de Apuestas */
+    #bets-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 20px;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .bet-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 15px;
+        border-radius: 10px;
+        transition: 0.3s;
+        border-left: 5px solid transparent;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .bet-card:hover {
+        transform: scale(1.05);
+        border-left: 5px solid #00ff99;
+    }
+
+    /* 🔥 Estilos para los resultados */
+    .bet-result {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        width: 80px;
+    }
+
+    .win {
+        background-color: #00ff99;
+        color: black;
+    }
+
+    .lose {
+        background-color: #ff4c4c;
+        color: white;
+    }
+
+    .pending {
+        background-color: #ffcc00;
+        color: black;
+    }
+
+</style>
+
+<h1 style="text-align: center; margin-top: 20px;">Your Bets</h1>
+<ul id="bets-list"></ul>
+<p id="error-message" style="text-align: center; color: red;"></p>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", async function () {
+        try{
+            const response = await fetch('/session-user', { credentials: 'include' });
+            if (!response.ok) throw new Error('User not authenticated');
+
+            const user = await response.json();
+            document.getElementById('username-display').innerText = `Welcome, ${user.username}`;
+            document.getElementById('balance-display').innerText = `Balance: $${user.balance}`;
+
+            document.getElementById('menu-button').addEventListener('click', () => {
+                window.location.href = 'prueba.html';
+            });
+
+            document.getElementById('logout-button').addEventListener('click', async () => {
+                await fetch('/logout', { method: 'POST', credentials: 'include' });
+                window.location.href = 'login.html';
+            });
+            }catch (error) {
+                window.location.href = 'login.html';
+        }
+    })
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const betsList = document.getElementById('bets-list');
+        const errorMessage = document.getElementById('error-message');
+        const balanceDisplay = document.getElementById('balance-display'); // 🔥 Elemento del balance del usuario
+        
+        async function fetchUserBalance() {
+            try {
+                const response = await fetch('/session-user', { credentials: 'include' });
+                if (!response.ok) throw new Error('Failed to fetch user data.');
+                const user = await response.json();
+                balanceDisplay.textContent = `Balance: $${user.balance}`;
+            } catch (error) {
+                console.error('Error fetching user balance:', error);
+            }
+        }
+
+        try {
+            const response = await fetch('/get-bet-history', { credentials: 'include' });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch bet history.');
+            }
+
+            const bets = await response.json();
+
+            if (bets.length === 0) {
+                betsList.innerHTML = '<li style="text-align: center;">No bets found.</li>';
+                return;
+            }
+
+            bets.forEach(bet => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('bet-card');
+
+                let resultClass = "pending";
+                if (bet.result === "Win") resultClass = "win";
+                else if (bet.result === "Lose") resultClass = "lose";
+
+                listItem.innerHTML = `
+                    <div>
+                    <strong>Game ID:</strong> ${bet.game_id} <br>
+                    <strong>Amount:</strong> $${bet.amount} <br>
+                    <strong>Team:</strong> ${bet.team} <br>
+                    <strong>Date:</strong> ${new Date(bet.created_at).toLocaleString()} <br>
+                    <strong>Result:</strong> <span class="bet-result ${resultClass}">${bet.result}</span>
+                    ${bet.result === 'Win' && bet.claimed !== 'YES' ? `<button class="claim-button" data-bet-id="${bet.bet_id}">Claim Winnings</button>` : 
+                    (bet.result === 'Win' && bet.claimed === 'YES' ? '<span>Already Claimed</span>' : '')}
+                    </div>
+                `;
+
+                if (bet.result === 'Win' && bet.claimed === 'NO') {
+                    const claimButton = listItem.querySelector('.claim-button');
+                    claimButton.addEventListener('click', async () => {
+                        try {
+                            const claimResponse = await fetch('/claim-winnings', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                credentials: 'include',
+                                body: JSON.stringify({ betId: bet.bet_id }),
+                            });
+
+                            const result = await claimResponse.json();
+
+                            if (result.success) {
+                            alert('Winnings claimed successfully!');
+                            claimButton.textContent = 'Already Claimed';
+                            claimButton.disabled = true;
+
+                            // 🔥 Animación del balance aumentando
+                            const winnings = result.winnings;
+                            const currentBalance = parseFloat(balanceDisplay.textContent.replace('Balance: $', ''));
+                            let newBalance = currentBalance + winnings;
+
+                            let count = currentBalance;
+                            const interval = setInterval(() => {
+                                if (count >= newBalance) {
+                                    clearInterval(interval);
+                                    balanceDisplay.textContent = `Balance: $${newBalance}`;
+                                } else {
+                                    count += 1;
+                                    balanceDisplay.textContent = `Balance: $${count}`;
+                                }
+                            }, 10); // ⏳ Aumenta el número cada 10ms para efecto de "subida"
+
+                        } else {
+                                alert(result.error);
+                            }
+                        } catch (error) {
+                            console.error('Error claiming winnings:', error);
+                            alert('Error claiming winnings. Please try again later.');
+                        }
+                    });
+                }
+
+                betsList.appendChild(listItem);
+            });
+            await fetchUserBalance();
+        } catch (error) {
+            console.error('Error fetching bet history:', error);
+            errorMessage.textContent = 'An error occurred while loading your bets. Please try again later.';
+        }
+    });
+</script>
+
+
+</body>
+</html>

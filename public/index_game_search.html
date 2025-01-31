@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Game ID</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Game ID</h1>
+    <form id="searchForm">
+        <label for="homeTeam">Home Team</label>
+        <input type="text" id="homeTeam" placeholder="Home Team Name" required>
+
+        <label for="awayTeam">Away Team</label>
+        <input type="text" id="awayTeam" placeholder="Away Team Name" required>
+
+        <label for="gameDate">Game Date</label>
+        <input type="date" id="gameDate" required>
+
+        <button type="submit">Search ID</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const homeTeam = urlParams.get('homeTeam');
+    const awayTeam = urlParams.get('awayTeam');
+    const gameDate = urlParams.get('gameDate');
+
+    if (homeTeam) document.getElementById('homeTeam').value = homeTeam;
+    if (awayTeam) document.getElementById('awayTeam').value = awayTeam;
+    if (gameDate) document.getElementById('gameDate').value = gameDate;
+});
+
+document.getElementById('searchForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const homeTeam = document.getElementById('homeTeam').value.trim();
+    const awayTeam = document.getElementById('awayTeam').value.trim();
+    let gameDate = document.getElementById('gameDate').value;
+
+    if (!homeTeam || !awayTeam || !gameDate) {
+        alert('Complete all the information, please');
+        return;
+    }
+
+    // Adjust the date to ensure the correct format
+    const originalDate = new Date(gameDate);
+    originalDate.setDate(originalDate.getDate() - 1); // Subtract one day
+    gameDate = originalDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.textContent = 'Searching...';
+
+    try {
+        const response = await fetch('http://localhost:3000/search-game-id', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ homeTeam, awayTeam, gameDate }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.gameId) {
+                resultDiv.textContent = `Game ID: ${data.gameId}`;
+            } else {
+                resultDiv.textContent = 'We could not find a game with the given information.';
+            }
+        } else {
+            resultDiv.textContent = 'Error searching game. Please try again.';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        resultDiv.textContent = 'Error searching game.';
+    }
+});
+
+    </script>
+</body>
+</html>

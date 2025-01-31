@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Bets</title>
+    <link rel="stylesheet" href="styles_your_bets.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+
+</head>
+<body id="index-your-bets">
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-football-ball"></i>
+            <h1>BetZone</h1>
+        </div>
+        <div id="user-info">
+            <span id="username-display"></span>
+            <button id="logout-button">Log out</button>
+        </div>
+    </header>
+
+    <main>
+        <h1>Your Bet History</h1>
+        <button id="update-results-button">Actualizar Resultados</button>
+
+        <ul id="bet-list"></ul>
+    </main>
+    <div id="menu-button" class="menu-button"></div>
+        <i class="fas fa-bars"></i>
+    </div>
+    <li>
+        <a href="prueba.html" class="nav-link">
+            <i class="fas fa-coins"></i> mainmenu
+        </a>
+    </li>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const betList = document.getElementById('bet-list');
+    
+            try {
+                // Fetch betting history from the server
+                const response = await fetch('/get-bet-history', { credentials: 'include' });
+                if (!response.ok) throw new Error('Failed to fetch bet history.');
+    
+                const bets = await response.json();
+                betList.innerHTML = '';
+    
+                // If no bets are found, display a message
+                if (bets.length === 0) {
+                    betList.innerHTML = '<li>No bets found.</li>';
+                    return;
+                }
+    
+                // Generate the betting history items
+                bets.forEach(bet => {
+                    console.log(`Creating item for Bet ID: ${bet.betId}, Game ID: ${bet.gameId}`); // Debug
+    
+                    const listItem = document.createElement('li');
+                    listItem.style.marginBottom = '15px';
+                    listItem.style.padding = '15px';
+                    listItem.style.border = '1px solid #ccc';
+                    listItem.style.borderRadius = '8px';
+    
+                    listItem.innerHTML = `
+                        <p><strong>Game:</strong> ${bet.gameName} | <strong>Game ID:</strong> ${bet.gameId}</p>
+                        <p><strong>Bet on:</strong> ${bet.team}</p>
+                        <p><strong>Amount:</strong> $${bet.amount} | <strong>Date:</strong> ${bet.created_at}</p>
+                        <p id="result-${bet.betId}" style="color: gray;">Status: Pending...</p>
+                        <button data-bet-id="${bet.betId}" data-game-id="${bet.gameId}" class="check-result-btn">Check Result</button>
+                    `;
+    
+                    betList.appendChild(listItem);
+                });
+    
+                // Attach event listeners to all buttons
+                const buttons = document.querySelectorAll('.check-result-btn');
+                buttons.forEach(button => {
+    button.addEventListener('click', async () => {
+        const betId = button.getAttribute('data-bet-id'); // ID de la apuesta
+        const gameId = button.getAttribute('data-game-id'); // ID del juego
+
+        // Este console.log debe imprimir el Game ID
+        console.log(`Game ID: ${gameId}`);
+        console.log(`Bet ID: ${betId}`); // Opcional para depuración adicional
+
+        // Resto del código para manejar el evento
+        const resultElement = document.getElementById(`result-${betId}`);
+        if (!resultElement) {
+            console.error(`Result element not found for Bet ID: ${betId}`);
+            return;
+        }
+
+        resultElement.textContent = 'Checking...';
+
+        try {
+            const resultResponse = await fetch(`/check-bet-result/${gameId}`, { credentials: 'include' });
+            if (!resultResponse.ok) throw new Error('Failed to fetch bet result.');
+
+            const resultData = await resultResponse.json();
+            console.log(`Result data for Game ID ${gameId}:`, resultData);
+
+            if (resultData.result === 'Win') {
+                resultElement.textContent = `Won: $${resultData.winnings} (Winner: ${resultData.winningTeam})`;
+                resultElement.style.color = 'green';
+            } else if (resultData.result === 'Lose') {
+                resultElement.textContent = `Lost: $${resultData.amount} (Winner: ${resultData.winningTeam})`;
+                resultElement.style.color = 'red';
+            } else {
+                resultElement.textContent = 'Pending...';
+                resultElement.style.color = 'gray';
+            }
+        } catch (error) {
+            console.error('Error fetching result:', error);
+            resultElement.textContent = 'Error fetching result.';
+            resultElement.style.color = 'orange';
+        }
+    });
+});
+
+
+    
+            } catch (error) {
+                console.error('Error loading bet history:', error);
+                betList.innerHTML = '<li>Error loading bet history.</li>';
+            }
+        });
+    </script>
+    
+    
+    
+
+    
+    
+</body>
+</html>
